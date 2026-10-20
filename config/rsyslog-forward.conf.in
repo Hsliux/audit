@@ -1,0 +1,22 @@
+# Replace __REMOTE_HOST__ and __REMOTE_PORT__ before installation.
+# The normalizer writes one canonical JSON object per line to this file.
+module(load="imfile")
+ruleset(name="infra_audit_forward") {
+  action(type="omfwd" target="__REMOTE_HOST__" port="__REMOTE_PORT__"
+         protocol="tcp" template="RSYSLOG_SyslogProtocol23Format"
+         action.resumeRetryCount="-1"
+         queue.type="LinkedList" queue.size="10000"
+         queue.filename="infra_audit_fwd" queue.saveOnShutdown="on")
+}
+input(type="imfile" File="/var/log/infra-audit/normalized.jsonl"
+      Tag="infra-audit:" Facility="local6" Severity="info"
+      PersistStateInterval="100" ruleset="infra_audit_forward")
+# Requires the distro's existing imuxsock/imjournal input to ingest logger messages.
+if $syslogtag startswith "infra-audit-shell:" then {
+  call infra_audit_forward
+  stop
+}
+if ($syslogtag startswith "rootsh" or $syslogtag startswith "pvedaemon" or $syslogtag startswith "pveproxy") then {
+  call infra_audit_forward
+  stop
+}

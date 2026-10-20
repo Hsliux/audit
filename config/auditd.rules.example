@@ -1,0 +1,15 @@
+# REVIEW ONLY. Installing requires Linux auditd, path checks and capacity planning.
+# Do not add -D or -e 2 here; those can alter other audit policies or lock changes.
+# Tailor auid threshold to UID_MIN. Add b32 only if the host supports 32-bit ABI.
+# The rules can be high-volume on busy multi-user hosts.
+-a always,exit -F arch=b64 -S execve -F auid>=1000 -F auid!=unset -k infra_exec_user
+-a always,exit -F arch=b64 -S execve -F auid=0 -k infra_exec_root
+
+# Identity, privilege and remote-login configuration changes.
+-w /etc/passwd -p wa -k infra_identity
+-w /etc/group -p wa -k infra_identity
+-w /etc/shadow -p wa -k infra_identity
+-w /etc/sudoers -p wa -k infra_privilege
+-w /etc/sudoers.d/ -p wa -k infra_privilege
+-w /etc/ssh/sshd_config -p wa -k infra_ssh_config
+-w /etc/audit/ -p wa -k infra_audit_config

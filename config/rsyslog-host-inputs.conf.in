@@ -1,0 +1,8 @@
+# Optional Linux host inputs; install only after choosing the correct auth path.
+# The rsyslog process must be able to read audit.log and the selected auth log.
+input(type="imfile" File="/var/log/audit/audit.log"
+      Tag="infra-audit-auditd:" Facility="local6" Severity="info"
+      PersistStateInterval="100" ruleset="__RULESET__")
+input(type="imfile" File="__AUTH_LOG__"
+      Tag="infra-audit-auth:" Facility="local6" Severity="info"
+      PersistStateInterval="100" ruleset="__RULESET__")

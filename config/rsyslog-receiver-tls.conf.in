@@ -1,0 +1,45 @@
+# Receiver template. Replace __CLIENT_NAME__ with sender certificate identity.
+# Requires an rsyslog build with GnuTLS. Restrict network access separately.
+module(load="imtcp")
+input(type="imtcp" port="6514" ruleset="infra_audit_receive_tls"
+      StreamDriver.Name="gtls" StreamDriver.Mode="1"
+      StreamDriver.AuthMode="x509/name"
+      StreamDriver.PermittedPeer="__CLIENT_NAME__"
+      StreamDriver.CAFile="/etc/infra-audit/tls/ca.pem"
+      StreamDriver.CertFile="/etc/infra-audit/tls/server.pem"
+      StreamDriver.KeyFile="/etc/infra-audit/tls/server-key.pem")
+template(name="infraAuditJsonLineTls" type="string" string="%msg%\n")
+template(name="infraAuditRawLineTls" type="string"
+         string="%timereported:::date-rfc3339% %hostname% %syslogtag% %msg%\n")
+ruleset(name="infra_audit_receive_tls") {
+  if $syslogtag startswith "infra-audit:" then {
+    action(type="omfile" file="/var/log/infra-audit/received.jsonl"
+           template="infraAuditJsonLineTls")
+    stop
+  }
+  if $syslogtag startswith "infra-audit-shell:" then {
+    action(type="omfile" file="/var/log/infra-audit/received-shell-raw.jsonl"
+           template="infraAuditJsonLineTls")
+    stop
+  }
+  if $syslogtag startswith "infra-audit-auditd:" then {
+    action(type="omfile" file="/var/log/infra-audit/received-auditd-raw.log"
+           template="infraAuditRawLineTls")
+    stop
+  }
+  if $syslogtag startswith "infra-audit-auth:" then {
+    action(type="omfile" file="/var/log/infra-audit/received-auth-raw.log"
+           template="infraAuditRawLineTls")
+    stop
+  }
+  if $syslogtag startswith "rootsh" then {
+    action(type="omfile" file="/var/log/infra-audit/received-rootsh-raw.log"
+           template="infraAuditRawLineTls")
+    stop
+  }
+  if ($syslogtag startswith "pvedaemon" or $syslogtag startswith "pveproxy") then {
+    action(type="omfile" file="/var/log/infra-audit/received-pve-raw.log"
+           template="infraAuditRawLineTls")
+    stop
+  }
+}

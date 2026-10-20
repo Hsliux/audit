@@ -1,0 +1,2 @@
+# Use only for the isolated Docker or local interactive test.
+. /poc/scripts/bash_audit.sh

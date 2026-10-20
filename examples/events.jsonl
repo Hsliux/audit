@@ -1,0 +1,7 @@
+{"source":"auditd","event":{"time":"2026-10-20T02:00:00Z","host":"node1","auid":"1001","uid":"0","tty":"pts0","syscall":"execve","exe":"/usr/bin/virsh","success":"yes","serial":"audit:123","pid":101}}
+{"source":"rootsh","event":{"time":"2026-10-20T02:00:01Z","host":"node1","user":"alice","tty":"pts0","session_id":"rootsh:42","phase":"start","log_ref":"/var/log/rootsh/42"}}
+{"source":"docker","event":{"Type":"container","Action":"exec_start","Actor":{"ID":"container123","Attributes":{"name":"web"}},"timeNano":1792461602000000000}}
+{"source":"k8s_audit","event":{"requestReceivedTimestamp":"2026-10-20T02:00:03Z","auditID":"audit-uuid","verb":"create","user":{"username":"alice"},"objectRef":{"resource":"pods","namespace":"default","name":"web","subresource":"exec"},"responseStatus":{"code":101}}}
+{"source":"libvirt","event":{"time":"2026-10-20T02:00:04Z","host":"kvm1","domain":"vm01","domain_uuid":"uuid-vm01","operation":"start","phase":"begin"}}
+{"source":"pve","event":{"time":"2026-10-20T02:00:05Z","host":"pve1","service":"pvedaemon","task":"qmstart","vm_id":"100","user":"root@pam","upid":"UPID:pve1:1:2:3:qmstart:100:root@pam:","status":"OK"}}
+{"source":"containerd","event":{"timestamp":"2026-10-20T02:00:06Z","host":"node1","namespace":"k8s.io","topic":"/tasks/start","event":{"container_id":"container456"}}}

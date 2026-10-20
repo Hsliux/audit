@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Infrastructure audit event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "time", "observed_at", "source", "actor", "host", "tty", "container_id", "pod", "namespace", "vm_id", "action", "target", "result", "correlation_id", "details"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "time": {"type": ["string", "null"], "description": "UTC source timestamp, null if absent"},
+    "observed_at": {"type": "string", "description": "UTC time assigned by normalizer"},
+    "source": {"enum": ["shell", "docker", "k8s_audit", "auditd", "rootsh", "libvirt", "pve", "containerd"]},
+    "actor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["user", "uid"],
+      "properties": {"user": {"type": ["string", "null"]}, "uid": {"type": ["string", "integer", "null"]}}
+    },
+    "host": {"type": "string"},
+    "tty": {"type": ["string", "null"]},
+    "container_id": {"type": ["string", "null"]},
+    "pod": {"type": ["string", "null"]},
+    "namespace": {"type": ["string", "null"]},
+    "vm_id": {"type": ["string", "null"]},
+    "action": {"type": "string"},
+    "target": {"type": ["string", "null"]},
+    "result": {"type": ["string", "integer", "boolean", "null"]},
+    "correlation_id": {"type": ["string", "integer", "null"]},
+    "details": {"type": "object"}
+  }
+}
