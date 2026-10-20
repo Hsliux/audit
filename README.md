@@ -2,6 +2,8 @@
 
 状态：**隔离演示项目**。本项目没有修改主机、Docker、Kubernetes、KVM/libvirt 或 PVE 的运行配置，也没有启动服务。`src/normalize.py` 和 `src/collect_file.py` 是可运行的字段映射与文件持续采集 PoC；正式采集器、持久化、鉴权与传输加密仍需按环境实现和验收。服务器审计的本轮范围仅是**发送到 Rsyslog**，参见 [服务器转发说明](SERVER_FORWARDING.md)、[交付清单](DELIVERY.md) 和 [当前审计状态](CURRENT_STATUS.md)。
 
+全新 CentOS 7 主机的安装命令、核验及卸载见 [CentOS 7 安装说明](CENTOS7_INSTALL.md)。该脚本只覆盖主机 auditd、认证日志与已加载 profile 的交互式 Bash。
+
 ## 1. 架构与采集边界
 
 ```mermaid
